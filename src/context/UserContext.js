@@ -1,6 +1,8 @@
 // Modules
 import { createContext, useState } from "react";
 import Cookies from "js-cookie";
+import { api } from "../utils/apiHelper";
+
 // Initialize Context
 const UserContext = createContext(null);
 
@@ -12,14 +14,8 @@ export const UserProvider = (props) => {
 
   // SignIn Handler
   const signIn = async (credentials) => {
-    const fetchOptions = {
-      method: 'GET',
-      headers: {}
-    };
-    const encodedCredentials = btoa(`${credentials.emailAddress}:${credentials.password}`);
-    fetchOptions.headers.Authorization = `Basic ${encodedCredentials}`;
     try {
-      const response = await fetch('http://localhost:5000/api/users', fetchOptions);
+      const response = await api('/users', 'GET', null, credentials);
       if (response.status === 200) {
         const user = await response.json();
         // Store the decoded password to Cookies. NOT RECOMMENDED! Will need to code in something better
